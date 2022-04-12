@@ -25,6 +25,7 @@ typedef struct s_phil
 	pthread_mutex_t	*lf;
 	pthread_mutex_t	*rg;
 	pthread_mutex_t	*printm;
+	pthread_mutex_t	*check;
 	pthread_t		self;
 	struct timeval	tek;
 	struct timeval	last;
@@ -42,6 +43,7 @@ typedef struct s_gen
 	int				rep;
 	int				doa;
 	pthread_mutex_t	*vilki;
+	pthread_mutex_t	*checks;
 	pthread_mutex_t	printm;
 	t_phil			*phils;
 	struct timeval	start;
@@ -49,7 +51,7 @@ typedef struct s_gen
 
 void	phils_init(t_gen *data);
 void	phil_init(t_gen *data, int i);
-void	vilki_init(t_gen *data);
+void	mutex_init(t_gen *data);
 void	av_to_data(int ac, char **av, t_gen *data);
 void	doa_check(t_gen *data);
 void	*routine(void *phil);

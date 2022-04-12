@@ -22,16 +22,19 @@ void	av_to_data(int ac, char **av, t_gen *data)
 		data->rep = ft_atoi(av[5]);
 }
 
-void	vilki_init(t_gen *data)
+void	mutex_init(t_gen *data)
 {
 	int	i;
 
 	data->vilki = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) \
 	* data->num);
+	data->checks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) \
+	* data->num);
 	i = 0;
 	while (i < data->num)
 	{
 		pthread_mutex_init(data->vilki + i, NULL);
+		pthread_mutex_init(data->checks + i, NULL);
 		i++;
 	}
 }
@@ -40,6 +43,7 @@ void	phil_init(t_gen *data, int i)
 {
 	data->phils[i].data = data;
 	data->phils[i].printm = &(data->printm);
+	data->phils[i].check = data->checks + i;
 	data->phils[i].n = i + 1;
 	data->phils[i].lf = data->vilki + i;
 	data->phils[i].rep = data->rep;
@@ -85,7 +89,7 @@ int	main(int ac, char **av)
 		if (!data.rep)
 			data.rep = -1;
 		pthread_mutex_init(&(data.printm), NULL);
-		vilki_init(&data);
+		mutex_init(&data);
 		phils_init(&data);
 		doa_check(&data);
 	}

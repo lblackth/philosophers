@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-static int	pow10(int n)
+static int	pow_10(int n)
 {
 	int	s;
 
@@ -52,7 +52,7 @@ void	ft_putnbr_fd(int n, int fd)
 	len = d_len(n);
 	while (len--)
 	{
-		temp = ((n / pow10(len)) % 10) * zn + '0';
+		temp = ((n / pow_10(len)) % 10) * zn + '0';
 		write(fd, &temp, 1);
 	}
 }

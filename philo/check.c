@@ -16,24 +16,20 @@ void	doa_check(t_gen *data)
 {
 	struct timeval	tmp;
 	int				i;
-	int				bl;
 
-	bl = 1;
-	while (bl)
+	i = 0;
+	while (1)
 	{
-		i = 0;
-		while (i < data->num)
+		gettimeofday(&tmp, NULL);
+		pthread_mutex_lock(data->phils[i].check);
+		if (timeval_comp(data->phils[i].last, tmp) / 1000 > data->t_die)
 		{
-			gettimeofday(&tmp, NULL);
-			if (timeval_comp(data->phils[i].last, tmp) / 1000 > data->t_die)
-			{
-				bl = 0;
-				pthread_mutex_lock(&(data->printm));
-				printf("%d %d died\n", timeval_comp(data->start, tmp) \
-				/ 1000, i + 1);
-				break ;
-			}
-			i++;
+			pthread_mutex_lock(&(data->printm));
+			printf("%d %d died\n", timeval_comp(data->start, tmp) \
+			/ 1000, i + 1);
+			break ;
 		}
+		pthread_mutex_unlock(data->phils[i].check);
+		i = (i + 1) % data->num;
 	}
 }

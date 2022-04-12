@@ -9,7 +9,7 @@ CC			=	cc
 
 REMOVE		=	rm -f
 
-CFLAGS		=	-Wall -Werror -Wextra -g
+CFLAGS		=	-Wall -Werror -Wextra -pthread
 
 NAME		=	philo
 

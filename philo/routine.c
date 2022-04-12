@@ -21,16 +21,17 @@ void	forks_eating(t_phil *phil)
 	phil->tek) / 1000, phil->n);
 	pthread_mutex_unlock(phil->printm);
 	pthread_mutex_lock(phil->rg);
-	gettimeofday(&(phil->tek), NULL);
 	pthread_mutex_lock(phil->printm);
-	printf("%d %d has taken a fork\n", timeval_comp(phil->data->start, \
+	gettimeofday(&(phil->tek), NULL);
+	printf("%d %d has taken a fork\n%d %d is eating\n", \
+	timeval_comp(phil->data->start, \
+	phil->tek) / 1000, phil->n, timeval_comp(phil->data->start, \
 	phil->tek) / 1000, phil->n);
-	printf("%d %d is eating\n", timeval_comp(phil->data->start, phil->tek) \
-	/ 1000, phil->n);
+	pthread_mutex_lock(phil->check);
 	gettimeofday(&(phil->last), NULL);
+	pthread_mutex_unlock(phil->check);
 	pthread_mutex_unlock(phil->printm);
 	ft_sleep(phil, phil->data->t_eat);
-	gettimeofday(&(phil->tek), NULL);
 	pthread_mutex_unlock(phil->lf);
 	pthread_mutex_unlock(phil->rg);
 }
@@ -38,6 +39,7 @@ void	forks_eating(t_phil *phil)
 void	sleeping_thinking(t_phil *phil)
 {
 	pthread_mutex_lock(phil->printm);
+	gettimeofday(&(phil->tek), NULL);
 	printf("%d %d is sleeping\n", timeval_comp(phil->data->start, phil->tek) \
 	/ 1000, phil->n);
 	pthread_mutex_unlock(phil->printm);

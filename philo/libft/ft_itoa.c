@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-static int	pow10(int n)
+static int	pow_10(int n)
 {
 	int	s;
 
@@ -58,6 +58,6 @@ char	*ft_itoa(int n)
 		arr[0] = '-';
 	}
 	while (len--)
-		arr[tlen - len - 1] = ((n / pow10(len)) % 10) * zn + '0';
+		arr[tlen - len - 1] = ((n / pow_10(len)) % 10) * zn + '0';
 	return (arr);
 }
