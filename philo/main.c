@@ -22,24 +22,31 @@ void	av_to_data(int ac, char **av, t_gen *data)
 		data->rep = ft_atoi(av[5]);
 }
 
-void	mutex_init(t_gen *data)
+int	mutex_init(t_gen *data)
 {
 	int	i;
 
 	data->vilki = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) \
 	* data->num);
+	if (!data->vilki)
+		return (0);
 	data->checks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) \
 	* data->num);
+	if (!data->checks)
+		return (0);
 	i = 0;
 	while (i < data->num)
 	{
-		pthread_mutex_init(data->vilki + i, NULL);
-		pthread_mutex_init(data->checks + i, NULL);
-		i++;
+		if (pthread_mutex_init(data->vilki + i, NULL))
+			return (0);
+		if (pthread_mutex_init(data->checks + i, NULL))
+			return (0);
+		++i;
 	}
+	return (1);
 }
 
-void	phil_init(t_gen *data, int i)
+int	phil_init(t_gen *data, int i)
 {
 	data->phils[i].data = data;
 	data->phils[i].printm = &(data->printm);
@@ -52,30 +59,37 @@ void	phil_init(t_gen *data, int i)
 		data->phils[i].rg = data->vilki + i + 1;
 	else
 		data->phils[i].rg = data->vilki;
-	pthread_create(&(data->phils[i].self), NULL, routine, \
-	(void *)((data->phils) + i));
+	if (pthread_create(&(data->phils[i].self), NULL, routine, \
+	(void *)((data->phils) + i)))
+		return (0);
+	return (1);
 }
 
-void	phils_init(t_gen *data)
+int	phils_init(t_gen *data)
 {
 	int	i;
 
 	data->phils = (t_phil *)malloc(sizeof(t_phil) * data->num);
+	if (!data->phils)
+		return (0);
 	i = 0;
 	gettimeofday(&(data->start), NULL);
 	while (i < data->num)
 	{
-		phil_init(data, i);
+		if (!phil_init(data, i))
+			return (0);
 		i += 2;
 	}
 	usleep(500);
 	i = 1;
 	while (i < data->num)
 	{
-		phil_init(data, i);
+		if (!phil_init(data, i))
+			return (0);
 		i += 2;
 	}
 	usleep(500);
+	return (1);
 }
 
 int	main(int ac, char **av)
@@ -89,9 +103,14 @@ int	main(int ac, char **av)
 		if (!data.rep)
 			data.rep = -1;
 		pthread_mutex_init(&(data.printm), NULL);
-		mutex_init(&data);
-		phils_init(&data);
+		if (!mutex_init(&data))
+			return (0);
+		if (!phils_init(&data))
+			return (0);
 		doa_check(&data);
+		free(data.checks);
+		free(data.phils);
+		free(data.vilki);
 	}
 	return (0);
 }

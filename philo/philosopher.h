@@ -41,7 +41,7 @@ typedef struct s_gen
 	int				t_die;
 	int				num;
 	int				rep;
-	int				doa;
+	int				done;
 	pthread_mutex_t	*vilki;
 	pthread_mutex_t	*checks;
 	pthread_mutex_t	printm;
@@ -49,9 +49,9 @@ typedef struct s_gen
 	struct timeval	start;
 }				t_gen;
 
-void	phils_init(t_gen *data);
-void	phil_init(t_gen *data, int i);
-void	mutex_init(t_gen *data);
+int		phils_init(t_gen *data);
+int		phil_init(t_gen *data, int i);
+int		mutex_init(t_gen *data);
 void	av_to_data(int ac, char **av, t_gen *data);
 void	doa_check(t_gen *data);
 void	*routine(void *phil);

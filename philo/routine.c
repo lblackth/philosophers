@@ -32,13 +32,13 @@ void	forks_eating(t_phil *phil)
 	pthread_mutex_unlock(phil->check);
 	pthread_mutex_unlock(phil->printm);
 	ft_sleep(phil, phil->data->t_eat);
+	pthread_mutex_lock(phil->printm);
 	pthread_mutex_unlock(phil->lf);
 	pthread_mutex_unlock(phil->rg);
 }
 
 void	sleeping_thinking(t_phil *phil)
 {
-	pthread_mutex_lock(phil->printm);
 	gettimeofday(&(phil->tek), NULL);
 	printf("%d %d is sleeping\n", timeval_comp(phil->data->start, phil->tek) \
 	/ 1000, phil->n);
@@ -62,5 +62,6 @@ void	*routine(void *philo)
 		sleeping_thinking(phil);
 		phil->rep--;
 	}
+	phil->data->done++;
 	return (NULL);
 }

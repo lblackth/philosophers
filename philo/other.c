@@ -22,6 +22,9 @@ void	ft_sleep(t_phil *phil, int ms)
 	struct timeval	tmp;
 
 	gettimeofday(&tmp, NULL);
-	while(timeval_comp(phil->tek, tmp) / 1000 < ms)
+	while (timeval_comp(phil->tek, tmp) < ms * 1000)
+	{
+		usleep(20);
 		gettimeofday(&tmp, NULL);
+	}
 }
